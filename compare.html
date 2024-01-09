@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Comparsion Of Our site  & Gsm site </title>
+</head>
+<body>
+  <h1>Comparsion Of Our site & Gsm site </h1>
+
+  <label for="name">Our Site Url:</label>
+  <input type="text" id="OurSiteUrl" placeholder="Enter our site Url">
+<br>
+  <label for="email">Gsm siteUrl:</label>
+  <input type="email" id="GsmsiteUrl" placeholder="Enter Gsm site Url">
+<br>
+  <button onclick="displayData()">Submit</button>
+
+  <div id="display"></div>
+
+  <div id="compare1"></div>
+  <div id="compare2"></div>
+
+
+  <script>
+    function displayData() {
+      var OurSiteUrl = document.getElementById("OurSiteUrl").value;
+      var GsmsiteUrl = document.getElementById("GsmsiteUrl").value;
+
+      var displayDiv = document.getElementById("display");
+      displayDiv.innerHTML ="<td> OurSiteUrl:</td> " + OurSiteUrl + "<br>GsmsiteUrl: " + GsmsiteUrl;
+      
+      var url1 = OurSiteUrl;
+      var url2 = GsmsiteUrl;
+
+      var xhr1 = new XMLHttpRequest();
+      xhr1.open("GET", url1, true);
+      setTimeout(xhr1, 20000); 
+      xhr1.responseType = "text";
+      xhr1.onload = function() {
+         if (xhr1.status === 200) {
+                var parser = new DOMParser();
+                var htmlDoc = parser.parseFromString(xhr1.responseText, "text/html");
+                    var oursiteBatterydata = Array.from(htmlDoc.querySelectorAll("#overview > div.content_inner_wrap.ovrviw_spcl.border > div.overview_rgt > div:nth-child(6) > div.key_specs_box > table > tbody > tr > td:nth-child(4) > ul > li > label:nth-child(3)")).map(element => element.textContent).join("");
+                    var ourproductname = Array.from(htmlDoc.getElementsByClassName("h1_pro_head")).map(element => element.textContent).join("");
+                        var displayDiv1 = document.getElementById("compare1");
+                        displayDiv1.innerHTML = "Data for our site: " + oursiteBatterydata +"--"+ourproductname ;
+                    }
+                };
+                xhr1.send();
+
+                var xhr2 = new XMLHttpRequest();  
+                xhr2.open("GET", url2, true);
+                xhr2.responseType = "text";
+                xhr2.onload = function() {
+                    if (xhr2.status === 200) {
+                        var parser2 = new DOMParser();
+                        var htmlDoc2 = parser2.parseFromString(xhr2.responseText, "text/html");
+                            var gsmBatterydata = Array.from(htmlDoc2.querySelectorAll("#body > div > div.review-header > div > div.article-info-line.page-specs.light.border-bottom > h1")).map(element => element.textContent).join("");
+                            var gsmproductname = Array.from(htmlDoc2.getElementsByClassName("specs-phone-name-title")).map(element => element.textContent).join("");                         
+                                var displayDiv2 = document.getElementById("compare2");
+                                displayDiv2.innerHTML = "Data for Gsm site: " + gsmBatterydata +"--"+gsmproductname ;
+                            }
+                        };
+                        xhr2.send();
+                    }
+    </script>
+    </body>
